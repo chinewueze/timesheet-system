@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Helmet } from 'react-helmet';
+import { useNavigate } from "react-router-dom";
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export const Report = () => {
@@ -44,6 +45,11 @@ export const Report = () => {
             [name]: value,
         }));
     };
+    const navigate = useNavigate()
+    const handleLogout = () => {
+        sessionStorage.removeItem('access_token');
+        navigate('/login')
+    }
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true)
@@ -163,6 +169,9 @@ export const Report = () => {
                 <title> REPORTS </title>
                 <link rel="icon" type="image/png" href="./assets/Images/adviewicon.png" />
             </Helmet>
+            <div className="w-full p-1 h-11 flex justify-end my-4">
+                <button className="bg-blue-500 text-white rounded-md p-1 mr-[3%]" onClick={handleLogout} > LOGOUT </button>
+            </div>
             <div>
                 {isModalOpen && !isOnline && (
                     <div className="fixed inset-0 flex items-center justify-center relative">
