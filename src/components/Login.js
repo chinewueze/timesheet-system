@@ -82,7 +82,7 @@ export const SignIn = () => {
                 console.log("valid ");
             } else {
                 setError(true);
-                setModalMessage("Invalid Email address/password⚠️");   https://github.com/chinewueze/timesheet-system
+                setModalMessage("Invalid Email address/password⚠️");  
                 setShowModal(true);
                 setTimeout(() => {
                     setShowModal(false);
