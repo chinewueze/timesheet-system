@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 export const Report = () => {
-
     const [formData, setFormData] = useState({
         date: "",
         project: "",
@@ -39,29 +38,6 @@ export const Report = () => {
     const [reportEntries, setReportEntries] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        const accessToken = sessionStorage.getItem("access_token");
-
-        const fetchReportData = async () => {
-            try {
-                const response = await fetch('https://timesheet-api-main.onrender.com/record/reports', {
-                    method: 'GET',
-                    headers: {
-                        'Authorization': `Bearer ${accessToken}`,
-                    },
-                });
-
-                if (response.status === 200) {
-                    const data = await response.json();
-                    setReportEntries(data);
-                }
-            } catch (error) {
-                console.error('An error occurred while fetching report data:', error);
-            }
-        };
-
-        fetchReportData(); // Fetch existing report data when the component loads
-    }, []);
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -104,24 +80,7 @@ export const Report = () => {
             });
 
             if (response.status === 201) {
-                const fetchReportData = async () => {
-                    try {
-                        const response = await fetch('https://timesheet-api-main.onrender.com/record/reports', {
-                            method: 'GET',
-                            headers: {
-                                'Authorization': `Bearer ${accessToken}`,
-                            },
-                        });
-                        if (response.status === 200) {
-                            const data = await response.json();
-                            setReportEntries(data);
-                        }
-                    } catch (error) {
-                        console.error('An error occurred while fetching report data:', error);
-                    }
-                };
-
-                fetchReportData();
+                setReportEntries([...reportEntries, requestData]);
                 console.log('Report submitted successfully.');
             } else {
                 alert('Report submission failed.');
@@ -296,10 +255,10 @@ export const Report = () => {
                                     onClick={handleSaveChanges}
                                     disabled={loading}
                                 >
-                                    {loading ? (<div> <FontAwesomeIcon icon={faSpinner} spin />  <span> Submitting </span> </div>
-                                    ) : (
-                                        "Save changes"
-                                    )}
+                                     {loading ? (<div> <FontAwesomeIcon icon={faSpinner} spin />  <span> Submitting </span> </div>
+                                ) : (
+                                    "Save changes"
+                                )}
                                 </button>
                                 <button
                                     className="bg-gray-500  p-2 rounded-lg"
