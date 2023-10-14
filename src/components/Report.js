@@ -169,12 +169,17 @@ export const Report = () => {
                 <title> REPORTS </title>
                 <link rel="icon" type="image/png" href="./assets/Images/adviewicon.png" />
             </Helmet>
-            <div className="w-full p-1 h-11 flex justify-end my-4">
-                <button className="bg-blue-500 text-white rounded-md p-1 mr-[3%]" onClick={handleLogout} > LOGOUT </button>
+            <div className='flex  w-full h-21 justify-end bg-green-500'>
+                <div className="">
+                    <button className="bg-blue-500 text-white rounded-md mr-[3%]" onClick={()=>navigate("/profile")} > View profile </button>
+                </div>
+                <div className="">
+                    <button className="bg-blue-500 text-white rounded-md p-1 mr-[3%]" onClick={handleLogout} > LOGOUT </button>
+                </div>
             </div>
             <div>
                 {isModalOpen && !isOnline && (
-                    <div className="fixed inset-0 flex items-center justify-center relative">
+                    <div className=" inset-0 flex items-center justify-center relative">
                         <div className="bg-white p-6 rounded-lg w-4/6 absolute top-7">
                             <p className="text-lg font-semibold mb-4 text-center">No network/WiFi detected!</p>
                         </div>
@@ -255,10 +260,10 @@ export const Report = () => {
                                     onClick={handleSaveChanges}
                                     disabled={loading}
                                 >
-                                     {loading ? (<div> <FontAwesomeIcon icon={faSpinner} spin />  <span> Submitting </span> </div>
-                                ) : (
-                                    "Save changes"
-                                )}
+                                    {loading ? (<div> <FontAwesomeIcon icon={faSpinner} spin />  <span> Submitting </span> </div>
+                                    ) : (
+                                        "Save changes"
+                                    )}
                                 </button>
                                 <button
                                     className="bg-gray-500  p-2 rounded-lg"
