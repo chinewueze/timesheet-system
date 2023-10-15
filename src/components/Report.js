@@ -12,6 +12,7 @@ export const Report = () => {
         duration: "",
         link: "",
     });
+    
     const [isOnline, setIsOnline] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalDisplayDuration, setModalDisplayDuration] = useState(4500);
@@ -38,6 +39,18 @@ export const Report = () => {
     const [reportEntries, setReportEntries] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
+    useEffect(() => {
+        const savedData = sessionStorage.getItem('reportEntries');
+        if (savedData) {
+            setReportEntries(JSON.parse(savedData));
+        }
+    }, []);
+
+    // Update sessionStorage when reportEntries change
+    useEffect(() => {
+        sessionStorage.setItem('reportEntries', JSON.stringify(reportEntries));
+    }, [reportEntries]);
+    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -80,7 +93,9 @@ export const Report = () => {
             });
 
             if (response.status === 201) {
-                setReportEntries([...reportEntries, requestData]);
+                // setReportEntries([...reportEntries, requestData]);
+                const newReportEntries = [...reportEntries, requestData];
+                setReportEntries(newReportEntries);
                 console.log('Report submitted successfully.');
             } else {
                 alert('Report submission failed.');
@@ -169,12 +184,14 @@ export const Report = () => {
                 <title> REPORTS </title>
                 <link rel="icon" type="image/png" href="./assets/Images/adviewicon.png" />
             </Helmet>
-            <div className='flex  w-full h-21 justify-end bg-green-500'>
-                <div className="">
-                    <button className="bg-blue-500 text-white rounded-md mr-[3%]" onClick={()=>navigate("/profile")} > View profile </button>
-                </div>
-                <div className="">
-                    <button className="bg-blue-500 text-white rounded-md p-1 mr-[3%]" onClick={handleLogout} > LOGOUT </button>
+            <div className='flex  w-full h-[75px] justify-end items-center bg-green-500'>
+                <div className='flex p-5'>
+                    <div className="">
+                        <button className="bg-blue-500 text-white rounded-md p-1 mr-3" onClick={() => navigate("/profile")} > View profile </button>
+                    </div>
+                    <div className="">
+                        <button className="bg-blue-500 text-white rounded-md p-1 mr-[3%]" onClick={handleLogout} > LOGOUT </button>
+                    </div>
                 </div>
             </div>
             <div>
