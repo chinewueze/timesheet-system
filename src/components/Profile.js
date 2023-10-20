@@ -8,7 +8,6 @@ export const Profile = () => {
         middleName: 'Rawlings',
         email: 'johndoe@example.com',
         username: 'johndoe',
-        bio: 'I love coding and learning new technologies.',
     });
     return (
         <div className='w-screen h-screen'>
