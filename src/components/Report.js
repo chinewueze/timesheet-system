@@ -12,7 +12,7 @@ export const Report = () => {
         duration: "",
         link: "",
     });
-    
+
     const [isOnline, setIsOnline] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalDisplayDuration, setModalDisplayDuration] = useState(4500);
@@ -39,18 +39,10 @@ export const Report = () => {
     const [reportEntries, setReportEntries] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
-    useEffect(() => {
-        const savedData = sessionStorage.getItem('reportEntries');
-        if (savedData) {
-            setReportEntries(JSON.parse(savedData));
-        }
-    }, []);
+    const [reportData, setReportData] = useState({});
+    const accessToken = sessionStorage.getItem("access_token");
+    const userId = sessionStorage.getItem("user_id");
 
-    // Update sessionStorage when reportEntries change
-    useEffect(() => {
-        sessionStorage.setItem('reportEntries', JSON.stringify(reportEntries));
-    }, [reportEntries]);
-    
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -63,6 +55,31 @@ export const Report = () => {
         sessionStorage.removeItem('access_token');
         navigate('/login')
     }
+
+    useEffect(() => {
+        const fetchReportData = async () => {
+            try {
+                const response = await fetch(`https://timesheet-api-main.onrender.com/view/reports/${userId}`, {
+                    method: "GET",
+                    headers: {
+                        "x-api-key": "a57cca53d2086ab3488b358eebbca2e7",
+                        "Authorization": `Bearer ${accessToken}`,
+                    },
+                });
+
+                if (response.status === 200) {
+                    const data = await response.json();
+                    setReportData(data.data.report); // Assuming report data is under data.data.report
+                } else {
+                    console.error("Failed to fetch report data. Status:", response.status);
+                }
+            } catch (error) {
+                console.error("An error occurred while fetching report data:", error);
+            }
+        };
+        fetchReportData(); // Call the fetchReportData function when the component loads.
+    }, [userId, accessToken]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true)
@@ -71,7 +88,7 @@ export const Report = () => {
             setLoading(false)
             return;
         }
-        const accessToken = sessionStorage.getItem("access_token");
+
         const requestData = {
             date: formData.date,
             project: formData.project,
@@ -93,9 +110,8 @@ export const Report = () => {
             });
 
             if (response.status === 201) {
-                // setReportEntries([...reportEntries, requestData]);
-                const newReportEntries = [...reportEntries, requestData];
-                setReportEntries(newReportEntries);
+                setReportEntries([...reportEntries, requestData]);
+                console.log("Response:", response)
                 console.log('Report submitted successfully.');
             } else {
                 alert('Report submission failed.');
@@ -114,10 +130,11 @@ export const Report = () => {
             link: "",
         });
     }
-    const handleEdit = (reportData) => {
+    const handleEdit = (data) => {
         setEditMode(true);
-        setFormData(reportData);
+        setFormData(data);
     };
+
     const handleCancelEdit = () => {
         setEditMode(false);
         setFormData({
@@ -152,16 +169,17 @@ export const Report = () => {
                 body: JSON.stringify(requestData),
             });
             if (response.status === 200) {
-                const updatedReportEntries = reportEntries.map(report => {
+                const updatedReportEntries = reportData.map(report => {
                     if (report.id === formData.id) {
                         return { ...requestData, id: report.id };
                     }
                     return report;
                 });
-                setReportEntries(updatedReportEntries);
+                setReportData(updatedReportEntries);
                 console.log('Report updated successfully.');
             } else {
-                alert('Report update failed.');
+                // alert('Report update failed.');
+                console.log("Respose:", response)
             }
         } catch (error) {
             console.error('An error occurred:', error);
@@ -381,39 +399,33 @@ export const Report = () => {
                             <th className='border-2 border-solid border-black p-1'> LINK </th>
                         </thead>
                         <tbody>
-                            {reportEntries.map((report, index) => (
-                                <tr key={index}>
-
-                                    <td className="border-2 border-solid border-black p-3 ">
-                                        {index + 1}
-                                    </td>
-                                    <td className="border-2 border-solid border-black p-3 ">
-                                        {report.date}
-                                    </td>
-                                    <td className="border-2 border-solid border-black p-3 ">
-                                        {report.project}
-                                    </td>
-                                    <td className="border-2 border-solid border-black p-3 ">
-                                        {report.task}
-                                    </td>
-                                    <td className="border-2 border-solid border-black p-3 ">
-                                        {report.status}
-                                    </td>
-                                    <td className="border-2 border-solid border-black p-3 ">
-                                        {report.duration}
-                                    </td>
-                                    <td className="border-2 border-solid border-black p-3 text-blue-500">
-                                        <a href={report.link.startsWith("http") ? report.link : `http://${report.link}`} target="_blank" rel="noopener noreferrer">{report.link} </a>
-
-                                    </td>
-                                    <button
-                                        className="bg-gray-500 text-white p-2 rounded-lg w-20 mx-2 cursor-pointer"
-                                        onClick={() => handleEdit(report)}
-                                    >
-                                        Edit
-                                    </button>
-                                </tr>
-                            ))}
+                            {Object.keys(reportData).map((dayOfWeek, index) => {
+                                const report = reportData[dayOfWeek];
+                                if (!report) {
+                                    return null; 
+                                }
+                                return (
+                                    <tr key={index}>
+                                        <td className="border-2 border-solid border-black p-3 ">{index + 1}</td>
+                                        <td className="border-2 border-solid border-black p-3 "> {new Date(report.date).toDateString()}</td>
+                                        <td className="border-2 border-solid border-black p-3 ">{report.project}</td>
+                                        <td className="border-2 border-solid border-black p-3 ">{report.task}</td>
+                                        <td className="border-2 border-solid border-black p-3 ">{report.status}</td>
+                                        <td className="border-2 border-solid border-black p-3 ">{report.duration}</td>
+                                        <td className="border-2 border-solid border-black p-3 text-blue-500">
+                                            <a href={report.link.startsWith("http") ? report.link : `http://${report.link}`} target="_blank" rel="noopener noreferrer">{report.link}</a>
+                                        </td>
+                                        <td className="border-2 border-solid border-black p-3">
+                                            <button
+                                                className="bg-gray-500 text-white p-2 rounded-lg w-20 mx-2 cursor-pointer"
+                                                onClick={()=> handleEdit(report)}
+                                            >
+                                                Edit
+                                            </button>
+                                        </td>
+                                    </tr>
+                                );
+                            })}
                         </tbody>
                     </table>
                 </div>
