@@ -202,7 +202,7 @@ export const Report = () => {
                 <title> REPORTS </title>
                 <link rel="icon" type="image/png" href="./assets/Images/adviewicon.png" />
             </Helmet>
-            <div className='flex  w-full h-[75px] justify-end items-center bg-green-500'>
+            <div className='flex  w-full h-[75px] justify-end items-center bg-[#232f3e]'>
                 <div className='flex p-5'>
                     <div className="">
                         <button className="bg-blue-500 text-white rounded-md p-1 mr-3" onClick={() => navigate("/profile")} > View profile </button>
@@ -376,7 +376,7 @@ export const Report = () => {
                                 />
                             </div>
                             <button
-                                className=" bg-green-600 mx-[33%] my-[5%]  p-1 w-32 rounded-lg"
+                                className=" bg-gray-400 mx-[33%] my-[5%]  p-1 w-32 rounded-lg"
                                 disabled={loading}
                             >
                                 {loading ? (<div> <FontAwesomeIcon icon={faSpinner} spin />  <span> Submitting </span> </div>

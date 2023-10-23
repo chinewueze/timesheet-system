@@ -103,7 +103,7 @@ export const SignIn = () => {
         }));
     }
     return (
-        <div className="w-full h-screen bg-green-500 relative">
+        <div className="w-full h-screen bg-[#232f3e] relative">
             <Helmet>
                 <title> SIGN IN </title>
                 <link rel="icon" type="image/png" href="./assets/Images/login-icon.jpeg" />
@@ -157,7 +157,7 @@ export const SignIn = () => {
                     </div>
                     <button
                         onClick={handleSubmit}
-                        className=" bg-green-600 lg:mx-[45%] sm:mx-[25%] mt-2  p-1 w-32 rounded-lg"
+                        className=" bg-gray-400 lg:mx-[45%] sm:mx-[25%] mt-2  p-1 w-32 rounded-lg"
                         disabled={loading}
                     >
                         {loading ? (<div> <FontAwesomeIcon icon={faSpinner} spin />  <span> Sign In </span> </div>
