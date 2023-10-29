@@ -3,23 +3,13 @@ import { useNavigate } from 'react-router-dom';
 export const Profile = () => {
     const navigate = useNavigate()
     const [userData, setUserData] = useState(null);
-    // const [user, setUser] = useState({
-    //     firstName: 'John ',
-    //     lastName: 'Doe',
-    //     middleName: 'Rawlings',
-    //     email: 'johndoe@example.com',
-    //     username: 'johndoe',
-    // });
     const accessToken = sessionStorage.getItem("access_token");
     useEffect(() => {
-        // Define the API URL and headers
         const apiUrl = 'https://timesheet-api-main.onrender.com/user/account/personal-information/';
         const headers = {
           'x-api-key': 'a57cca53d2086ab3488b358eebbca2e7',
           Authorization: `Bearer ${accessToken}` ,
         };
-    
-        // Fetch the user's personal information from the API
         fetch(apiUrl, { headers })
           .then((response) => {
             if (response.status === 200) {
