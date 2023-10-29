@@ -1,14 +1,40 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 export const Profile = () => {
     const navigate = useNavigate()
-    const [user, setUser] = useState({
-        firstName: 'John ',
-        lastName: 'Doe',
-        middleName: 'Rawlings',
-        email: 'johndoe@example.com',
-        username: 'johndoe',
-    });
+    const [userData, setUserData] = useState(null);
+    // const [user, setUser] = useState({
+    //     firstName: 'John ',
+    //     lastName: 'Doe',
+    //     middleName: 'Rawlings',
+    //     email: 'johndoe@example.com',
+    //     username: 'johndoe',
+    // });
+    const accessToken = sessionStorage.getItem("access_token");
+    useEffect(() => {
+        // Define the API URL and headers
+        const apiUrl = 'https://timesheet-api-main.onrender.com/user/account/personal-information/';
+        const headers = {
+          'x-api-key': 'a57cca53d2086ab3488b358eebbca2e7',
+          Authorization: `Bearer ${accessToken}` ,
+        };
+    
+        // Fetch the user's personal information from the API
+        fetch(apiUrl, { headers })
+          .then((response) => {
+            if (response.status === 200) {
+              return response.json();
+            } else {
+              throw new Error('API request failed with status code: ' + response.status);
+            }
+          })
+          .then((data) => {
+            setUserData(data.data);
+          })
+          .catch((error) => {
+            console.error('An error occurred while making the API request: ' + error);
+          });
+      }, [accessToken]);
     return (
         <div className='w-screen h-screen'>
             <div className='w-full bg-green-500 h-[10vh] justify-center flex items-center'>
@@ -22,7 +48,7 @@ export const Profile = () => {
                         </div>
                         <div className=' h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md'>
                             <h2>
-                                {user.firstName}
+                                {userData?.firstname}
                             </h2>
                         </div>
                     </div>
@@ -31,7 +57,7 @@ export const Profile = () => {
                             <h1 className='text-lg font-bold'> Last Name </h1>
                         </div>
                         <div className=' h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3'>
-                            <h2> {user.lastName} </h2>
+                            <h2> {userData?.lastname} </h2>
                         </div>
                     </div>
                     <div>
@@ -39,7 +65,7 @@ export const Profile = () => {
                             <h1 className='text-lg font-bold'> Middle Name </h1>
                         </div>
                         <div className=' h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3'>
-                            <h2> {user.middleName} </h2>
+                            <h2> {userData?.middlename} </h2>
                         </div>
                     </div>
                     <div>
@@ -47,7 +73,7 @@ export const Profile = () => {
                            <h1 className='text-lg font-bold'> Email Address </h1>
                         </div>
                         <div className=' h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3'>
-                            <h2> {user.email} </h2>
+                            <h2> {userData?.email} </h2>
                         </div>
                     </div>
                     <div>
@@ -55,7 +81,7 @@ export const Profile = () => {
                             <h1 className='text-lg font-bold'> Username </h1>
                         </div>
                         <div className=' h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3'>
-                            <h2> {user.username} </h2>
+                            <h2> {userData?.username} </h2>
                         </div>
                     </div>
                     <button
