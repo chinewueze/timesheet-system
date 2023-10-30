@@ -64,13 +64,12 @@ export const Profile = () => {
     };
     return (
         <div className='w-screen h-screen'>
-            <div className='w-full bg-green-500 h-[10vh] justify-center flex items-center'>
-                <h1 className='text-2xl font-bold'> User Profile</h1>
-            </div>
+            <div className='w-full bg-[#232f3e] h-[10vh] justify-center flex items-center'>
+                <h1 className='text-2xl text-white font-bold'> {!isEditing ? `User Profile` : "Edit Profile"}</h1>
+            </div>"
             <div className='w-full h-90vh'>
                 <div className=' mx-auto w-fit p-[5%] lg:mt-[3%] sm:mt-[5%] '>
                     {isEditing ? (
-                        /* Render the edit form when isEditing is true */
                         <div>
                             <input
                                 type="text"
@@ -90,17 +89,49 @@ export const Profile = () => {
                                 value={editedData.middlename}
                                 onChange={(e) => setEditedData({ ...editedData, middlename: e.target.value })}
                             />
-                            <button onClick={handleSaveProfile} className="bg-green-500 text-white rounded-md p-2 mx-[35%] mt-3">
+                            <button onClick={handleSaveProfile} className="bg-gray-500 text-white rounded-md p-2 mx-[35%] mt-3">
                                 Save Profile
                             </button>
                         </div>
                     ) : (
                         /* Render the profile data when isEditing is false */
                         <div>
-                            <h2>{userData?.firstname}</h2>
-                            <h2>{userData?.lastname}</h2>
-                            <h2>{userData?.middlename}</h2>
-                            <button onClick={handleEditProfile} className="bg-green-500 text-white rounded-md p-2 mx-[35%] mt-3">
+                            <div>
+                                <div>
+                                    <h1 className="text-lg font-bold">First Name</h1>
+                                </div>
+                                <div className="h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md">
+                                    <h2>{userData?.firstname}</h2>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <h1 className="text-lg font-bold">Last Name</h1>
+                                </div>
+                                <div className="h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3">
+                                    <h2>{userData?.lastname}</h2>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <h1 className="text-lg font-bold">Middle Name</h1>
+                                </div>
+                                <div className="h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3">
+                                    <h2>{userData?.middlename}</h2>
+                                </div>
+                            </div>
+                            <div>
+                                <div>
+                                    <h1 className="text-lg font-bold">Email Address</h1>
+                                </div>
+                                <div className="h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3">
+                                    <h2>{userData?.email}</h2>
+                                </div>
+                                <div className="h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3">
+                                    <h2>{userData?.username}</h2>
+                                </div>
+                            </div>
+                            <button onClick={handleEditProfile} className="bg-gray-500 text-white rounded-md p-2 mx-[35%] mt-3">
                                 Edit Profile
                             </button>
                         </div>
