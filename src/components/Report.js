@@ -39,7 +39,7 @@ export const Report = () => {
     const [reportEntries, setReportEntries] = useState([]);
     const [editMode, setEditMode] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [reportData, setReportData] = useState({});
+    const [reportData, setReportData] = useState([]);
     const accessToken = sessionStorage.getItem("access_token");
     const userId = sessionStorage.getItem("user_id");
 
@@ -56,29 +56,30 @@ export const Report = () => {
         navigate('/login')
     }
 
-    useEffect(() => {
-        const fetchReportData = async () => {
-            try {
-                const response = await fetch(`https://timesheet-api-main.onrender.com/view/reports/${userId}`, {
-                    method: "GET",
-                    headers: {
-                        "x-api-key": "a57cca53d2086ab3488b358eebbca2e7",
-                        "Authorization": `Bearer ${accessToken}`,
-                    },
-                });
-
-                if (response.status === 200) {
-                    const data = await response.json();
-                    setReportData(data.data.report); // Assuming report data is under data.data.report
-                } else {
-                    console.error("Failed to fetch report data. Status:", response.status);
-                }
-            } catch (error) {
-                console.error("An error occurred while fetching report data:", error);
+    const fetchReportData = async () => {
+        try {
+            const response = await fetch(`https://timesheet-api-main.onrender.com/view/reports/${userId}`, {
+                method: "GET",
+                headers: {
+                    "x-api-key": "a57cca53d2086ab3488b358eebbca2e7",
+                    "Authorization": `Bearer ${accessToken}`,
+                },
+            });
+            if (response.status === 200) {
+                const data = await response.json();
+                setReportData(data.data.report);
+            } else {
+                console.error("Failed to fetch report data. Status:", response.status);
             }
-        };
-        fetchReportData(); // Call the fetchReportData function when the component loads.
+        } catch (error) {
+            console.error("An error occurred while fetching report data:", error);
+        }
+    };
+    // fetchReportData();
+    useEffect(() => {
+        fetchReportData();
     }, [userId, accessToken]);
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -111,6 +112,7 @@ export const Report = () => {
 
             if (response.status === 201) {
                 setReportEntries([...reportEntries, requestData]);
+                fetchReportData();
                 console.log("Response:", response)
                 console.log('Report submitted successfully.');
             } else {
@@ -149,16 +151,16 @@ export const Report = () => {
     const handleSaveChanges = async (e) => {
         e.preventDefault();
         setLoading(true)
+        const formattedDate = new Date(formData.date).toISOString().split('T')[0];
+        const requestData = {
+            date: formattedDate,
+            project: formData.project,
+            task: formData.task,
+            link: formData.link,
+            status: formData.status,
+            duration: formData.duration,
+        };
         try {
-            const accessToken = sessionStorage.getItem("access_token");
-            const requestData = {
-                date: formData.date,
-                project: formData.project,
-                task: formData.task,
-                link: formData.link,
-                status: formData.status,
-                duration: formData.duration,
-            };
             const response = await fetch('https://timesheet-api-main.onrender.com/record/report', {
                 method: 'PUT',
                 headers: {
@@ -177,8 +179,9 @@ export const Report = () => {
                 });
                 setReportData(updatedReportEntries);
                 console.log('Report updated successfully.');
+                fetchReportData();
             } else {
-                // alert('Report update failed.');
+                alert('Report update failed.');
                 console.log("Respose:", response)
             }
         } catch (error) {
@@ -402,7 +405,7 @@ export const Report = () => {
                             {Object.keys(reportData).map((dayOfWeek, index) => {
                                 const report = reportData[dayOfWeek];
                                 if (!report) {
-                                    return null; 
+                                    return null;
                                 }
                                 return (
                                     <tr key={index}>
@@ -418,7 +421,7 @@ export const Report = () => {
                                         <td className="border-2 border-solid border-black p-3">
                                             <button
                                                 className="bg-gray-500 text-white p-2 rounded-lg w-20 mx-2 cursor-pointer"
-                                                onClick={()=> handleEdit(report)}
+                                                onClick={() => handleEdit(report)}
                                             >
                                                 Edit
                                             </button>
