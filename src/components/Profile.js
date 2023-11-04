@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom';
 export const Profile = () => {
-    // const navigate = useNavigate()
+    const navigate = useNavigate()
     const [userData, setUserData] = useState(null);
-    const [isEditing, setIsEditing] = useState(false); // Add edit mode state
+    const [isEditing, setIsEditing] = useState(false); 
     const [editedData, setEditedData] = useState({
         firstname: '',
         lastname: '',
@@ -64,26 +64,30 @@ export const Profile = () => {
     };
     return (
         <div className='w-screen h-screen'>
-            <div className='w-full bg-[#232f3e] h-[10vh] justify-center flex items-center'>
-                <h1 className='text-2xl text-white font-bold'> {!isEditing ? `User Profile` : "Edit Profile"}</h1>
+            <div className='w-full bg-[#232f3e] h-[10vh]  flex items-center'>
+                <h1 className='text-2xl text-white font-bold mx-auto'> {!isEditing ? `User Profile` : "Edit Profile"}</h1>
+                <button className="bg-blue-500 text-white rounded-md p-1 mr-3" onClick={() => navigate("/reports")} > Back </button>
             </div>"
             <div className='w-full h-90vh'>
                 <div className=' mx-auto w-fit p-[5%] lg:mt-[3%] sm:mt-[5%] '>
                     {isEditing ? (
                         <div>
                             <input
+                                className='outline-none border-2 border-solid border-black rounded'
                                 type="text"
                                 placeholder="First Name"
-                                value={editedData.firstname}
+                                value={editedData?.firstname}
                                 onChange={(e) => setEditedData({ ...editedData, firstname: e.target.value })}
                             />
                             <input
+                                className='outline-none border-2 border-solid border-black rounded lg:my-0 sm:my-2 lg:mx-[2%] sm:mx-0'
                                 type="text"
                                 placeholder="Last Name"
                                 value={editedData.lastname}
                                 onChange={(e) => setEditedData({ ...editedData, lastname: e.target.value })}
                             />
                             <input
+                                className='outline-none border-2 border-solid border-black rounded'
                                 type="text"
                                 placeholder="Middle Name (optional)"
                                 value={editedData.middlename}
