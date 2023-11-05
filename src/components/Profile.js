@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 export const Profile = () => {
     const navigate = useNavigate()
     const [userData, setUserData] = useState(null);
-    const [isEditing, setIsEditing] = useState(false); 
+    const [isEditing, setIsEditing] = useState(false);
     const [editedData, setEditedData] = useState({
         firstname: '',
         lastname: '',
@@ -130,6 +130,9 @@ export const Profile = () => {
                                 </div>
                                 <div className="h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3">
                                     <h2>{userData?.email}</h2>
+                                </div>
+                                <div>
+                                    <h1 className="text-lg font-bold">Username</h1>
                                 </div>
                                 <div className="h-[35px] bg-gray-200 w-[355px] pl-5 pt-1 text-md font-semibold rounded-md mb-3">
                                     <h2>{userData?.username}</h2>
