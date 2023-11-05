@@ -30,7 +30,7 @@ export const Profile = () => {
             .catch((error) => {
                 console.error('An error occurred while making the API request: ' + error);
             });
-    }, [accessToken]);
+    }, []);
     const handleEditProfile = () => {
         setIsEditing(true);
     };
