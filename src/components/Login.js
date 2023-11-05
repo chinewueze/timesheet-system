@@ -77,7 +77,9 @@ export const SignIn = () => {
             });
             if (response.status === 200) {
                 const responseData = await response.json();
+                const userId = responseData["user-id"];
                 sessionStorage.setItem('access_token', responseData.access_token);
+                sessionStorage.setItem('user_id', userId)
                 navigate("/reports");
                 console.log("valid ");
             } else {
