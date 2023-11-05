@@ -70,16 +70,16 @@ export const Report = () => {
                 const data = await response.json();
                 setReportData(data.data.report);
             } else {
+                console.log('user_id')
                 console.error("Failed to fetch report data. Status:", response.status);
             }
         } catch (error) {
             console.error("An error occurred while fetching report data:", error);
         }
     };
-    // fetchReportData();
     useEffect(() => {
         fetchReportData();
-    }, [userId, accessToken]);
+    }, []);
 
 
     const handleSubmit = async (e) => {
